@@ -35,3 +35,24 @@ print(b)
 c = a.tolist()
 print(c)
 d = [4, 4, 6, 7]
+
+import deepcut
+
+conn = psycopg2.connect("dbname=postgres user=bigmorning")
+cur = conn.cursor()
+try:
+    cur.execute("CREATE TABLE test (word text, emw integer[]);")
+except psycopg2.ProgrammingError:
+    conn.rollback()
+text = input('ใส่ประโยค')
+for i in deepcut.tokenize(text):
+    a = permrob(4)
+    c = a.tolist()
+    cur.execute("INSERT INTO test VALUES (%(str)s, %(integer[])s);", {'str':i, 'integer[]':c})
+cur.execute("SELECT * FROM public.test;")
+m = cur.fetchall()
+for row in m:    
+    print(row)
+conn.commit()
+cur.close()
+conn.close()
